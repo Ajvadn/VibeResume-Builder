@@ -1,9 +1,10 @@
 import React from 'react';
 import { ResumeData } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
-export const ModernTemplate: React.FC<{ data: ResumeData }> = ({ data }) => {
+export const ModernTemplate: React.FC<{ data: ResumeData; font?: string }> = ({ data, font = 'font-sans' }) => {
     return (
-        <div className="font-sans text-slate-800 p-0 max-w-[210mm] mx-auto bg-white h-full flex min-h-[297mm]">
+        <div className={cn("text-slate-800 p-0 max-w-[210mm] mx-auto bg-white h-full flex min-h-[297mm]", font)}>
             {/* Sidebar */}
             <aside className="w-1/3 bg-slate-100 p-6 border-r border-slate-200">
                 <div className="mb-8">

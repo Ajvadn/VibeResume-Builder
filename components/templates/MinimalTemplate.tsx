@@ -1,9 +1,10 @@
 import React from 'react';
 import { ResumeData } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
-export const MinimalTemplate: React.FC<{ data: ResumeData }> = ({ data }) => {
+export const MinimalTemplate: React.FC<{ data: ResumeData; font?: string }> = ({ data, font = 'font-sans' }) => {
     return (
-        <div className="font-sans text-black p-8 max-w-[210mm] mx-auto bg-white h-full">
+        <div className={cn("text-black p-8 max-w-[210mm] mx-auto bg-white h-full", font)}>
             <header className="border-b-2 border-black pb-4 mb-6">
                 <h1 className="text-3xl font-bold uppercase tracking-widest mb-2">{data.personalInfo.fullName}</h1>
                 <div className="text-sm flex flex-wrap gap-4 text-gray-700">

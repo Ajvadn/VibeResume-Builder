@@ -108,3 +108,7 @@ label {
     padding: 0;
   }
 }
+
+.font-custom {
+  font-family: 'CustomFont', sans-serif !important;
+}

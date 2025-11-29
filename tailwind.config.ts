@@ -8,6 +8,19 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ["var(--font-outfit)", "sans-serif"], // Default
+                inter: ["var(--font-inter)", "sans-serif"],
+                roboto: ["var(--font-roboto)", "sans-serif"],
+                "open-sans": ["var(--font-open-sans)", "sans-serif"],
+                lato: ["var(--font-lato)", "sans-serif"],
+                montserrat: ["var(--font-montserrat)", "sans-serif"],
+                playfair: ["var(--font-playfair)", "serif"],
+                merriweather: ["var(--font-merriweather)", "serif"],
+                lora: ["var(--font-lora)", "serif"],
+                "roboto-mono": ["var(--font-roboto-mono)", "monospace"],
+                "fira-code": ["var(--font-fira-code)", "monospace"],
+            },
             colors: {
                 background: "var(--background)",
                 foreground: "var(--foreground)",

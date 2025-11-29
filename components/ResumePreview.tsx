@@ -8,19 +8,20 @@ interface ResumePreviewProps {
     data: ResumeData;
     template: 'minimal' | 'modern' | 'professional';
     zoom?: number;
+    font?: string;
 }
 
-export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, zoom = 1 }) => {
+export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, zoom = 1, font = 'font-sans' }) => {
     const renderTemplate = () => {
         switch (template) {
             case 'minimal':
-                return <MinimalTemplate data={data} />;
+                return <MinimalTemplate data={data} font={font} />;
             case 'professional':
-                return <ProfessionalTemplate data={data} />;
+                return <ProfessionalTemplate data={data} font={font} />;
             case 'modern':
-                return <ModernTemplate data={data} />;
+                return <ModernTemplate data={data} font={font} />;
             default:
-                return <MinimalTemplate data={data} />;
+                return <MinimalTemplate data={data} font={font} />;
         }
     };
 

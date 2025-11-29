@@ -10,6 +10,7 @@ import { Toolbar } from '@/components/ui/Toolbar';
 import { Button } from '@/components/ui/Button';
 import { Plus, Wand2, FileText, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { generateDocx } from '@/lib/docx-generator';
 
 const initialData: ResumeData = {
     personalInfo: {
@@ -37,6 +38,7 @@ export default function EditorPage() {
     const [data, setData] = useState<ResumeData>(initialData);
     const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'education' | 'projects' | 'skills' | 'templates'>('personal');
     const [template, setTemplate] = useState<'minimal' | 'modern' | 'professional'>('minimal');
+    const [font, setFont] = useState('font-sans');
     const [isGenerating, setIsGenerating] = useState(false);
     const [isParsing, setIsParsing] = useState(false);
     const [rawText, setRawText] = useState('');
@@ -211,7 +213,8 @@ export default function EditorPage() {
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-black text-white font-sans selection:bg-purple-500/30">
             <Toolbar
-                onDownload={() => window.print()}
+                onDownloadPdf={() => window.print()}
+                onDownloadDocx={() => generateDocx(data)}
                 onImport={() => setShowParser(!showParser)}
                 isGenerating={isGenerating}
             />
@@ -438,37 +441,111 @@ export default function EditorPage() {
                             )}
 
                             {activeTab === 'templates' && (
-                                <div className="grid grid-cols-1 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                    {[
-                                        { id: 'minimal', name: 'Minimalist', desc: 'Clean and simple, perfect for corporate roles.' },
-                                        { id: 'professional', name: 'Professional', desc: 'Traditional layout with a modern touch.' },
-                                        { id: 'modern', name: 'Modern', desc: 'Bold and creative, stands out from the crowd.', recommended: true }
-                                    ].map((t) => (
-                                        <div
-                                            key={t.id}
-                                            onClick={() => setTemplate(t.id as any)}
-                                            className={cn(
-                                                "p-6 rounded-2xl border cursor-pointer transition-all duration-300 relative overflow-hidden group",
-                                                template === t.id
-                                                    ? "bg-purple-900/20 border-purple-500 shadow-lg shadow-purple-500/20"
-                                                    : "bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/10"
-                                            )}
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <h3 className={cn("text-xl font-bold", template === t.id ? "text-purple-400" : "text-white")}>{t.name}</h3>
-                                                {t.recommended && (
-                                                    <span className="px-2 py-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-[10px] font-bold text-white uppercase tracking-wider shadow-lg">
-                                                        Recommended
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <p className="text-sm text-gray-400 mb-4">{t.desc}</p>
-                                            <div className="flex items-center gap-2 text-xs text-gray-500 group-hover:text-purple-400 transition-colors">
-                                                <span className={cn("w-2 h-2 rounded-full", template === t.id ? "bg-green-500 animate-pulse" : "bg-gray-600")}></span>
-                                                {template === t.id ? 'Active Template' : 'Click to Apply'}
-                                            </div>
+                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                    {/* Font Selection */}
+                                    <div>
+                                        <h3 className="text-lg font-bold mb-4 text-white flex items-center gap-2">
+                                            <span className="w-1 h-6 bg-purple-500 rounded-full"></span>
+                                            Typography
+                                        </h3>
+                                        <div className="grid grid-cols-3 gap-4">
+                                            {[
+                                                { id: 'font-sans', name: 'Default', class: 'font-sans' },
+                                                { id: 'font-inter', name: 'Inter', class: 'font-inter' },
+                                                { id: 'font-roboto', name: 'Roboto', class: 'font-roboto' },
+                                                { id: 'font-open-sans', name: 'Open Sans', class: 'font-open-sans' },
+                                                { id: 'font-lato', name: 'Lato', class: 'font-lato' },
+                                                { id: 'font-montserrat', name: 'Montserrat', class: 'font-montserrat' },
+                                                { id: 'font-playfair', name: 'Playfair', class: 'font-playfair' },
+                                                { id: 'font-merriweather', name: 'Merriweather', class: 'font-merriweather' },
+                                                { id: 'font-lora', name: 'Lora', class: 'font-lora' },
+                                                { id: 'font-roboto-mono', name: 'Roboto Mono', class: 'font-roboto-mono' },
+                                                { id: 'font-fira-code', name: 'Fira Code', class: 'font-fira-code' },
+                                                { id: 'font-custom', name: 'Custom', class: 'font-custom' },
+                                            ].map((f) => (
+                                                <div
+                                                    key={f.id}
+                                                    onClick={() => {
+                                                        if (f.id === 'font-custom') {
+                                                            document.getElementById('font-upload')?.click();
+                                                        } else {
+                                                            setFont(f.class);
+                                                        }
+                                                    }}
+                                                    className={cn(
+                                                        "p-4 rounded-xl border cursor-pointer transition-all duration-300 relative overflow-hidden group text-center",
+                                                        font === f.class
+                                                            ? "bg-purple-900/20 border-purple-500 shadow-lg shadow-purple-500/20"
+                                                            : "bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/10"
+                                                    )}
+                                                >
+                                                    <span className={cn("text-2xl block mb-2", f.class)}>Aa</span>
+                                                    <span className={cn("text-xs font-medium", font === f.class ? "text-purple-400" : "text-gray-400")}>{f.name}</span>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
+                                        <input
+                                            type="file"
+                                            id="font-upload"
+                                            className="hidden"
+                                            accept=".ttf,.otf,.woff,.woff2"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    try {
+                                                        const buffer = await file.arrayBuffer();
+                                                        const fontFace = new FontFace('CustomFont', buffer);
+                                                        await fontFace.load();
+                                                        document.fonts.add(fontFace);
+                                                        setFont('font-custom');
+                                                    } catch (err) {
+                                                        console.error("Failed to load font", err);
+                                                        alert("Failed to load font. Please try a valid TTF, OTF, or WOFF file.");
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                    </div>
+
+                                    {/* Template Selection */}
+                                    <div>
+                                        <h3 className="text-lg font-bold mb-4 text-white flex items-center gap-2">
+                                            <span className="w-1 h-6 bg-pink-500 rounded-full"></span>
+                                            Templates
+                                        </h3>
+                                        <div className="grid grid-cols-1 gap-6">
+                                            {[
+                                                { id: 'minimal', name: 'Minimalist', desc: 'Clean and simple, perfect for corporate roles.' },
+                                                { id: 'professional', name: 'Professional', desc: 'Traditional layout with a modern touch.' },
+                                                { id: 'modern', name: 'Modern', desc: 'Bold and creative, stands out from the crowd.', recommended: true }
+                                            ].map((t) => (
+                                                <div
+                                                    key={t.id}
+                                                    onClick={() => setTemplate(t.id as any)}
+                                                    className={cn(
+                                                        "p-6 rounded-2xl border cursor-pointer transition-all duration-300 relative overflow-hidden group",
+                                                        template === t.id
+                                                            ? "bg-purple-900/20 border-purple-500 shadow-lg shadow-purple-500/20"
+                                                            : "bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/10"
+                                                    )}
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <h3 className={cn("text-xl font-bold", template === t.id ? "text-purple-400" : "text-white")}>{t.name}</h3>
+                                                        {t.recommended && (
+                                                            <span className="px-2 py-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-[10px] font-bold text-white uppercase tracking-wider shadow-lg">
+                                                                Recommended
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-sm text-gray-400 mb-4">{t.desc}</p>
+                                                    <div className="flex items-center gap-2 text-xs text-gray-500 group-hover:text-purple-400 transition-colors">
+                                                        <span className={cn("w-2 h-2 rounded-full", template === t.id ? "bg-green-500 animate-pulse" : "bg-gray-600")}></span>
+                                                        {template === t.id ? 'Active Template' : 'Click to Apply'}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -503,7 +580,7 @@ export default function EditorPage() {
                     </div>
                     <div className="flex-1 overflow-y-auto p-8 flex justify-center items-start print-only bg-black/40 custom-scrollbar">
                         <div className="w-[210mm] min-h-[297mm] bg-white shadow-[0_0_50px_rgba(0,0,0,0.5)] ring-1 ring-white/10 transition-transform duration-500 ease-out transform hover:scale-[1.01] origin-top">
-                            <ResumePreview data={data} template={template} />
+                            <ResumePreview data={data} template={template} font={font} />
                         </div>
                     </div>
                 </div>

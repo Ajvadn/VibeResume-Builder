@@ -1,9 +1,10 @@
 import React from 'react';
 import { ResumeData } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
-export const ProfessionalTemplate: React.FC<{ data: ResumeData }> = ({ data }) => {
+export const ProfessionalTemplate: React.FC<{ data: ResumeData; font?: string }> = ({ data, font = 'font-serif' }) => {
     return (
-        <div className="font-serif text-black p-8 max-w-[210mm] mx-auto bg-white h-full">
+        <div className={cn("text-black p-8 max-w-[210mm] mx-auto bg-white h-full", font)}>
             <header className="text-center border-b border-gray-400 pb-6 mb-6">
                 <h1 className="text-4xl font-bold mb-3">{data.personalInfo.fullName}</h1>
                 <div className="text-sm flex justify-center gap-4 text-gray-800">
