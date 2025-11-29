@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { Wand2 } from "lucide-react";
+import { FileText } from "lucide-react";
 
 export default function Home() {
 
@@ -17,9 +17,9 @@ export default function Home() {
                 </h1>
 
                 <p className="text-xl mb-10 text-gray-400 leading-relaxed">
-                    Create ATS-friendly resumes with the power of <span className="text-purple-400 font-semibold">Gemini AI</span>.
+                    Create ATS-friendly resumes with <span className="text-purple-400 font-semibold">premium aesthetics</span>.
                     <br />
-                    Professional templates, premium aesthetics.
+                    Professional templates, instant downloads.
                 </p>
 
                 <Link href="/editor">
@@ -27,7 +27,7 @@ export default function Home() {
                         size="lg"
                         className="text-lg px-8 py-6 rounded-xl bg-white text-black hover:bg-gray-200 hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] border-none"
                     >
-                        <Wand2 className="mr-3 h-6 w-6" />
+                        <FileText className="mr-3 h-6 w-6" />
                         Start Creating
                     </Button>
                 </Link>

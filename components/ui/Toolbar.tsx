@@ -6,11 +6,10 @@ import Link from 'next/link';
 interface ToolbarProps {
     onDownloadPdf: () => void;
     onDownloadDocx: () => void;
-    onImport: () => void;
     isGenerating: boolean;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ onDownloadPdf, onDownloadDocx, onImport, isGenerating }) => {
+export const Toolbar: React.FC<ToolbarProps> = ({ onDownloadPdf, onDownloadDocx, isGenerating }) => {
     return (
         <div className="h-20 flex items-center justify-between px-8 no-print border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
             <div className="flex items-center gap-4">
@@ -37,10 +36,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onDownloadPdf, onDownloadDocx,
                 >
                     <Play size={16} className="mr-2 fill-current" />
                     Recompile
-                </Button>
-                <Button onClick={onImport} variant="ghost" className="text-gray-400 hover:text-white hover:bg-white/5">
-                    <FileUp size={16} className="mr-2" />
-                    Import
                 </Button>
             </div>
 

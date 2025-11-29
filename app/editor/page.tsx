@@ -8,9 +8,10 @@ import { ResumePreview } from '@/components/ResumePreview';
 import { Sidebar } from '@/components/ui/Sidebar';
 import { Toolbar } from '@/components/ui/Toolbar';
 import { Button } from '@/components/ui/Button';
-import { Plus, Wand2, FileText, Loader2 } from 'lucide-react';
+import { Plus, FileText, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateDocx } from '@/lib/docx-generator';
+import { templates } from '@/lib/templates';
 
 const initialData: ResumeData = {
     personalInfo: {
@@ -37,12 +38,8 @@ const initialData: ResumeData = {
 export default function EditorPage() {
     const [data, setData] = useState<ResumeData>(initialData);
     const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'education' | 'projects' | 'skills' | 'templates'>('personal');
-    const [template, setTemplate] = useState<'minimal' | 'modern' | 'professional'>('minimal');
+    const [template, setTemplate] = useState<string>('minimal');
     const [font, setFont] = useState('font-sans');
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [isParsing, setIsParsing] = useState(false);
-    const [rawText, setRawText] = useState('');
-    const [showParser, setShowParser] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
     // Load data from local storage on mount
@@ -71,96 +68,7 @@ export default function EditorPage() {
         return () => clearTimeout(timeoutId);
     }, [data]);
 
-    const parseResume = async () => {
-        if (!rawText.trim()) return;
-        setIsParsing(true);
-        try {
-            const response = await fetch('/api/parse-resume', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ rawText })
-            });
-            const parsedData = await response.json();
 
-            // Map parsed data to state
-            setData(prev => ({
-                ...prev,
-                personalInfo: {
-                    ...prev.personalInfo,
-                    ...(parsedData.personalInfo || {}),
-                    website: parsedData.personalInfo?.portfolio || prev.personalInfo.website
-                },
-                experience: (parsedData.experience || []).map((exp: any, i: number) => ({
-                    id: Date.now().toString() + i,
-                    company: exp.company,
-                    position: exp.role, // Map role to position
-                    startDate: exp.date?.split('-')[0]?.trim() || '', // Simple split, might need better parsing
-                    endDate: exp.date?.split('-')[1]?.trim() || '',
-                    description: exp.details?.join('\n') || '', // Join bullet points
-                    details: exp.details || []
-                })),
-                education: (parsedData.education || []).map((edu: any, i: number) => ({
-                    id: Date.now().toString() + i,
-                    institution: edu.institution,
-                    degree: edu.degree,
-                    graduationDate: edu.date,
-                    details: edu.details || []
-                })),
-                projects: (parsedData.projects || []).map((proj: any, i: number) => ({
-                    id: Date.now().toString() + i,
-                    name: proj.name,
-                    techStack: proj.techStack,
-                    date: proj.date,
-                    details: proj.details || []
-                })),
-                skills: {
-                    ...(parsedData.skills || {}),
-                    all: [
-                        ...(parsedData.skills?.languages || []),
-                        ...(parsedData.skills?.frameworks || []),
-                        ...(parsedData.skills?.tools || []),
-                        ...(parsedData.skills?.technologies || [])
-                    ]
-                }
-            }));
-            setShowParser(false);
-        } catch (error) {
-            console.error("Parsing failed", error);
-            alert("Failed to parse resume. Please try again.");
-        } finally {
-            setIsParsing(false);
-        }
-    };
-
-
-    const generateSummary = async () => {
-        if (!data.personalInfo.fullName && !data.experience.length) {
-            alert("Please enter some details first so Gemini can generate a summary.");
-            return;
-        }
-
-        setIsGenerating(true);
-        try {
-            const prompt = `Write a professional resume summary for ${data.personalInfo.fullName}. 
-      Experience: ${data.experience.map(e => `${e.position} at ${e.company}`).join(', ')}. 
-      Skills: ${data.skills.all?.join(', ') || ''}.`;
-
-            const response = await fetch('/api/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt })
-            });
-
-            const result = await response.json();
-            if (result.content) {
-                updatePersonalInfo('summary', result.content);
-            }
-        } catch (error) {
-            console.error("Failed to generate", error);
-        } finally {
-            setIsGenerating(false);
-        }
-    };
 
 
     const updatePersonalInfo = (field: string, value: string) => {
@@ -215,8 +123,7 @@ export default function EditorPage() {
             <Toolbar
                 onDownloadPdf={() => window.print()}
                 onDownloadDocx={() => generateDocx(data)}
-                onImport={() => setShowParser(!showParser)}
-                isGenerating={isGenerating}
+                isGenerating={false}
             />
 
             <div className="flex flex-1 overflow-hidden p-6 pt-0 gap-6">
@@ -231,47 +138,9 @@ export default function EditorPage() {
                             <span className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)]"></span>
                             {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                         </h2>
-                        {activeTab === 'personal' && (
-                            <Button
-                                onClick={generateSummary}
-                                disabled={isGenerating}
-                                variant="neon"
-                                size="sm"
-                                className="h-8 text-xs"
-                                isLoading={isGenerating}
-                            >
-                                {!isGenerating && <Wand2 size={12} className="mr-2" />}
-                                AI Generate
-                            </Button>
-                        )}
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-6 custom-scrollbar space-y-8">
-                        {showParser && (
-                            <div className="glass-panel p-6 animate-in fade-in slide-in-from-top-4 border-purple-500/30 rounded-xl bg-purple-900/10">
-                                <h3 className="text-lg font-bold mb-2 text-white flex items-center gap-2">
-                                    <FileText size={18} className="text-purple-400" />
-                                    Import Resume
-                                </h3>
-                                <p className="text-sm text-gray-400 mb-4">Paste your existing resume to auto-fill details.</p>
-                                <textarea
-                                    className="w-full h-48 mb-4 p-4 bg-black/60 border border-white/10 rounded-xl text-sm focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 outline-none resize-none placeholder:text-gray-600"
-                                    placeholder="Paste your entire resume here..."
-                                    value={rawText}
-                                    onChange={(e) => setRawText(e.target.value)}
-                                />
-                                <Button
-                                    onClick={parseResume}
-                                    disabled={isParsing}
-                                    className="w-full"
-                                    variant="neon"
-                                    isLoading={isParsing}
-                                >
-                                    {isParsing ? 'Analyzing...' : 'Parse Text'}
-                                </Button>
-                            </div>
-                        )}
-
                         <div className="space-y-8 pb-10">
                             {activeTab === 'personal' && (
                                 <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -514,11 +383,7 @@ export default function EditorPage() {
                                             Templates
                                         </h3>
                                         <div className="grid grid-cols-1 gap-6">
-                                            {[
-                                                { id: 'minimal', name: 'Minimalist', desc: 'Clean and simple, perfect for corporate roles.' },
-                                                { id: 'professional', name: 'Professional', desc: 'Traditional layout with a modern touch.' },
-                                                { id: 'modern', name: 'Modern', desc: 'Bold and creative, stands out from the crowd.', recommended: true }
-                                            ].map((t) => (
+                                            {templates.map((t) => (
                                                 <div
                                                     key={t.id}
                                                     onClick={() => setTemplate(t.id as any)}
@@ -537,7 +402,7 @@ export default function EditorPage() {
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <p className="text-sm text-gray-400 mb-4">{t.desc}</p>
+                                                    <p className="text-sm text-gray-400 mb-4">{t.description}</p>
                                                     <div className="flex items-center gap-2 text-xs text-gray-500 group-hover:text-purple-400 transition-colors">
                                                         <span className={cn("w-2 h-2 rounded-full", template === t.id ? "bg-green-500 animate-pulse" : "bg-gray-600")}></span>
                                                         {template === t.id ? 'Active Template' : 'Click to Apply'}
@@ -559,21 +424,21 @@ export default function EditorPage() {
                             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                             Live Preview
                         </span>
-                        <div className="flex bg-black/40 p-1 rounded-lg border border-white/5">
-                            {['minimal', 'professional', 'modern'].map((t) => (
+                        <div className="flex bg-black/40 p-1 rounded-lg border border-white/5 overflow-x-auto max-w-[300px] custom-scrollbar">
+                            {templates.map((t) => (
                                 <Button
-                                    key={t}
-                                    onClick={() => setTemplate(t as any)}
+                                    key={t.id}
+                                    onClick={() => setTemplate(t.id)}
                                     variant="ghost"
                                     size="sm"
                                     className={cn(
-                                        "capitalize text-xs h-8 px-4 rounded-md transition-all duration-300",
-                                        template === t
+                                        "capitalize text-xs h-8 px-4 rounded-md transition-all duration-300 whitespace-nowrap",
+                                        template === t.id
                                             ? "bg-white/10 text-white shadow-sm border border-white/5"
                                             : "text-gray-500 hover:text-gray-300"
                                     )}
                                 >
-                                    {t}
+                                    {t.name}
                                 </Button>
                             ))}
                         </div>
