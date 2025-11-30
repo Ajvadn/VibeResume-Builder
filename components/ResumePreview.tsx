@@ -27,6 +27,7 @@ interface ResumePreviewProps {
     template: string;
     zoom?: number;
     font?: string;
+    accentColor?: string;
 }
 
 const TEMPLATE_COMPONENTS: Record<string, React.FC<any>> = {
@@ -53,7 +54,7 @@ const TEMPLATE_COMPONENTS: Record<string, React.FC<any>> = {
     // Add other templates here as they are implemented
 };
 
-export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, zoom = 1, font = 'font-sans' }) => {
+export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, zoom = 1, font = 'font-sans', accentColor = '#8b5cf6' }) => {
     const TemplateComponent = TEMPLATE_COMPONENTS[template] || ((props: any) => <PlaceholderTemplate {...props} name={template} />);
 
     return (
@@ -61,7 +62,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template, zo
             className="shadow-2xl mx-auto origin-top transition-transform duration-200 bg-white"
             style={{ transform: `scale(${zoom})` }}
         >
-            <TemplateComponent data={data} font={font} />
+            <TemplateComponent data={data} font={font} accentColor={accentColor} />
         </div>
     );
 };

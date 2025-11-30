@@ -20,6 +20,7 @@ const config: Config = {
                 lora: ["var(--font-lora)", "serif"],
                 "roboto-mono": ["var(--font-roboto-mono)", "monospace"],
                 "fira-code": ["var(--font-fira-code)", "monospace"],
+                custom: ["CustomFont", "sans-serif"], // For custom uploaded fonts
             },
             colors: {
                 background: "var(--background)",

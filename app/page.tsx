@@ -4,12 +4,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { FileText } from "lucide-react";
 
+import { TemplateGallery } from "@/components/home/TemplateGallery";
+
 export default function Home() {
 
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24 font-sans bg-black selection:bg-purple-500/30">
-            <div className="glass-panel p-12 text-center max-w-2xl border border-white/10 shadow-2xl shadow-purple-900/20 rounded-3xl relative overflow-hidden">
+            <div className="glass-panel p-12 text-center max-w-2xl border border-white/10 shadow-2xl shadow-purple-900/20 rounded-3xl relative overflow-hidden mb-24">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500"></div>
 
                 <h1 className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 tracking-tight">
@@ -32,6 +34,8 @@ export default function Home() {
                     </Button>
                 </Link>
             </div>
+
+            <TemplateGallery />
         </main>
     );
 }

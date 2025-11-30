@@ -59,20 +59,33 @@ export const InfographicTemplate: React.FC<{ data: ResumeData; font?: string }> 
                     <div className="w-full mt-12">
                         <h2 className="text-left text-xs font-bold uppercase tracking-widest text-slate-500 mb-6 border-b border-slate-800 pb-2">Skills</h2>
                         <div className="space-y-4 w-full">
-                            {data.skills.all?.slice(0, 8).map((skill, i) => (
-                                <div key={i} className="w-full">
-                                    <div className="flex justify-between text-xs mb-1 text-slate-300">
-                                        <span>{skill}</span>
-                                        <span>{Math.floor(Math.random() * 20) + 80}%</span>
+                            {data.skills.all?.slice(0, 8).map((skill, i) => {
+                                // Generate a deterministic skill level based on the skill name string
+                                // This prevents hydration mismatches caused by Math.random()
+                                const getSkillLevel = (s: string) => {
+                                    let hash = 0;
+                                    for (let i = 0; i < s.length; i++) {
+                                        hash = s.charCodeAt(i) + ((hash << 5) - hash);
+                                    }
+                                    return 80 + (Math.abs(hash) % 21); // 80-100%
+                                };
+                                const level = getSkillLevel(skill);
+
+                                return (
+                                    <div key={i} className="w-full">
+                                        <div className="flex justify-between text-xs mb-1 text-slate-300">
+                                            <span>{skill}</span>
+                                            <span>{level}%</span>
+                                        </div>
+                                        <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full bg-indigo-500 rounded-full"
+                                                style={{ width: `${level}%` }}
+                                            ></div>
+                                        </div>
                                     </div>
-                                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-indigo-500 rounded-full"
-                                            style={{ width: `${Math.floor(Math.random() * 20) + 80}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     </div>
                 </aside>

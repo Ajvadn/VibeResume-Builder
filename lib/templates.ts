@@ -17,23 +17,23 @@ export const templates: TemplateConfig[] = [
     { id: 'corporate', name: 'Corporate', description: 'Blue/Navy accents, professional header.', category: 'modern' },
 
     // Classic
-    { id: 'classic-serif', name: 'Classic Serif', description: 'Times New Roman style, centered header.', category: 'classic' },
+    { id: 'classic-serif', name: 'Classic Serif', description: 'Times New Roman style, centered header.', category: 'classic', recommended: true },
     { id: 'elegant', name: 'Elegant', description: 'Bordered sections, refined typography.', category: 'classic' },
     { id: 'timeless', name: 'Timeless', description: 'Minimalist, single column, traditional spacing.', category: 'classic' },
     { id: 'executive', name: 'Executive', description: 'Authoritative, strong headers, conservative.', category: 'classic' },
 
     // Creative
-    { id: 'designer', name: 'Designer', description: 'Left sidebar with dark background, bold name.', category: 'creative' },
+    { id: 'designer', name: 'Designer', description: 'Left sidebar with dark background, bold name.', category: 'creative', recommended: true },
     { id: 'portfolio', name: 'Portfolio', description: 'Focus on projects, colorful headers.', category: 'creative' },
     { id: 'vibrant', name: 'Vibrant', description: 'Gradient accents and dynamic spacing.', category: 'creative' },
     { id: 'infographic', name: 'Infographic', description: 'Icons for contacts, visual skill bars.', category: 'creative' },
 
     // Technical
-    { id: 'devops', name: 'DevOps', description: 'Terminal-like font headers, dense layout.', category: 'technical' },
+    { id: 'devops', name: 'DevOps', description: 'Terminal-like font headers, dense layout.', category: 'technical', recommended: true },
     { id: 'engineering', name: 'Engineering', description: 'Two columns, focus on technical skills list.', category: 'technical' },
     { id: 'stack', name: 'Stack', description: 'Highlighted tech stack section, compact.', category: 'technical' },
 
     // Academic
-    { id: 'research', name: 'Research', description: 'Focus on publications/research, simple list.', category: 'academic' },
+    { id: 'research', name: 'Research', description: 'Focus on publications/research, simple list.', category: 'academic', recommended: true },
     { id: 'scholar', name: 'Scholar', description: 'Latex-style look, very clean and dense.', category: 'academic' },
 ];

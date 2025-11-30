@@ -21,7 +21,6 @@ body {
   background: #000000;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
-  overflow: hidden;
 }
 
 /* Glassmorphism Utilities */
@@ -90,7 +89,8 @@ label {
   body {
     background: white;
     color: black;
-    overflow: visible;
+    overflow: visible !important;
+    height: auto !important;
   }
 
   .no-print {
@@ -106,6 +106,18 @@ label {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: visible !important;
+    background: white !important;
+    z-index: 9999;
+  }
+
+  /* Reset any flex/grid layout that might interfere */
+  .flex,
+  .flex-col,
+  .h-screen {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 }
 

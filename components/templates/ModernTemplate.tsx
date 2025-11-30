@@ -2,7 +2,7 @@ import React from 'react';
 import { ResumeData } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-export const ModernTemplate: React.FC<{ data: ResumeData; font?: string }> = ({ data, font = 'font-sans' }) => {
+export const ModernTemplate: React.FC<{ data: ResumeData; font?: string; accentColor?: string }> = ({ data, font = 'font-sans', accentColor = '#6366f1' }) => {
     return (
         <div className={cn("text-slate-800 p-0 max-w-[210mm] mx-auto bg-white h-full flex min-h-[297mm]", font)}>
             {/* Sidebar */}
@@ -56,18 +56,18 @@ export const ModernTemplate: React.FC<{ data: ResumeData; font?: string }> = ({ 
             <main className="w-2/3 p-8">
                 {data.personalInfo.summary && (
                     <section className="mb-8">
-                        <h2 className="text-xl font-bold text-slate-800 mb-3 border-b-2 border-indigo-500 inline-block pb-1">Profile</h2>
+                        <h2 className="text-xl font-bold text-slate-800 mb-3 inline-block pb-1" style={{ borderBottom: `2px solid ${accentColor}` }}>Profile</h2>
                         <p className="text-sm leading-relaxed text-slate-600">{data.personalInfo.summary}</p>
                     </section>
                 )}
 
                 {data.experience.length > 0 && (
                     <section>
-                        <h2 className="text-xl font-bold text-slate-800 mb-6 border-b-2 border-indigo-500 inline-block pb-1">Experience</h2>
+                        <h2 className="text-xl font-bold text-slate-800 mb-6 inline-block pb-1" style={{ borderBottom: `2px solid ${accentColor}` }}>Experience</h2>
                         <div className="space-y-6">
                             {data.experience.map((exp) => (
                                 <div key={exp.id} className="relative pl-4 border-l-2 border-slate-200">
-                                    <div className="absolute -left-[5px] top-2 w-2 h-2 rounded-full bg-indigo-500"></div>
+                                    <div className="absolute -left-[5px] top-2 w-2 h-2 rounded-full" style={{ backgroundColor: accentColor }}></div>
                                     <div className="flex justify-between items-baseline mb-1">
                                         <h3 className="font-bold text-lg text-slate-800">{exp.position}</h3>
                                         <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded">{exp.startDate} – {exp.endDate}</span>

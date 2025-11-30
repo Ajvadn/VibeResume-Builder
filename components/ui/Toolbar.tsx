@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, Play, ZoomIn, ZoomOut, FileUp, Home, FileText } from 'lucide-react';
+import { Download, FileUp, Home, FileText } from 'lucide-react';
 import { Button } from './Button';
 import Link from 'next/link';
 
@@ -26,30 +26,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onDownloadPdf, onDownloadDocx,
                         Vibe<span className="text-purple-500">Maker</span>
                     </span>
                 </div>
-
-                <div className="h-8 w-px bg-white/10 mx-2"></div>
-
-                <Button
-                    onClick={() => { }}
-                    variant="neon"
-                    className="shadow-lg shadow-purple-500/20"
-                >
-                    <Play size={16} className="mr-2 fill-current" />
-                    Recompile
-                </Button>
             </div>
 
             <div className="flex items-center gap-4">
-                <div className="flex items-center bg-black/40 rounded-lg p-1 border border-white/10 backdrop-blur-sm shadow-inner shadow-black/50">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/10 text-gray-400 hover:text-white rounded-md">
-                        <ZoomOut size={14} />
-                    </Button>
-                    <span className="px-3 text-xs font-mono text-purple-400 font-bold">100%</span>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-white/10 text-gray-400 hover:text-white rounded-md">
-                        <ZoomIn size={14} />
-                    </Button>
-                </div>
-
                 <Button onClick={onDownloadDocx} variant="outline" className="border-blue-500/30 hover:bg-blue-500/10 hover:border-blue-500/50 text-blue-300 hover:text-blue-200 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] transition-all duration-300">
                     <FileText size={16} className="mr-2" />
                     DOCX
